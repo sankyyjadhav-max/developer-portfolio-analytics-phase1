@@ -1,0 +1,1 @@
+import {Router} from 'express'; import * as c from '../controllers/auth'; import {auth} from '../middleware/auth'; const r=Router(); r.post('/register',c.register);r.post('/login',c.login);r.post('/logout',c.logout);r.post('/forgot-password',c.forgotPassword);r.post('/reset-password',c.resetPassword);r.get('/me',auth,c.me);export default r;

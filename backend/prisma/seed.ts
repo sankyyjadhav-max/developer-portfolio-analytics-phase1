@@ -1,0 +1,10 @@
+import { PrismaClient } from '@prisma/client'; import bcrypt from 'bcryptjs';
+const prisma=new PrismaClient();
+async function main(){
+ const password=await bcrypt.hash('Demo@12345',12);
+ const user=await prisma.user.upsert({where:{email:'demo@example.com'},update:{},create:{name:'Demo Developer',email:'demo@example.com',password}});
+ const portfolio=await prisma.portfolio.upsert({where:{userId:user.id},update:{},create:{userId:user.id,slug:'demo-developer',published:true,fullName:'Demo Developer',title:'Full-stack developer & builder',location:'Bengaluru, India',email:'demo@example.com',introduction:'I build thoughtful digital products with clean engineering and clear interfaces.',about:'Developer focused on reliable web applications, product design and practical machine learning.',skills:['TypeScript','React','Next.js','Node.js','PostgreSQL','Machine Learning'],experience:[{company:'Studio North',position:'Software Developer',location:'Remote',startDate:'2024-01',endDate:'',current:true,description:'Built customer-facing web products and internal tools.'}],education:[{institution:'University',degree:'B.Tech',field:'Artificial Intelligence & Machine Learning',startYear:'2022',endYear:'2026',description:''}],socialLinks:{github:'https://github.com/',linkedin:'https://linkedin.com/',twitter:'',website:''},template:'minimal',accent:'blue',darkMode:false}});
+ await prisma.project.deleteMany({where:{portfolioId:portfolio.id}});
+ await prisma.project.createMany({data:[{portfolioId:portfolio.id,title:'Developer Portfolio',description:'A responsive portfolio builder with reusable templates and publishing controls.',technologies:['Next.js','Express','Prisma','PostgreSQL'],githubUrl:'https://github.com/',liveDemoUrl:'https://example.com',featured:true},{portfolioId:portfolio.id,title:'ML Classification Lab',description:'A practical machine learning project for image classification and evaluation.',technologies:['Python','TensorFlow','Scikit-learn'],githubUrl:'https://github.com/',featured:false}]});
+ console.log('Seed complete: demo@example.com / Demo@12345 / demo-developer');
+} main().finally(()=>prisma.$disconnect());

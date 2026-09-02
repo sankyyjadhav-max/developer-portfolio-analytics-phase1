@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #F8F6F2;
+  --foreground: #171717;
+  --primary: #E41159;
+  --primary-hover: #D90F53;
+  --muted: #817B75;
+  --card: #FFFFFF;
+  --border: rgba(23, 23, 23, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #F8F6F2;
+  color: #171717;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(228, 17, 89, 0.18);
+  color: #171717;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8F6F2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D2CDC7;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B9B2AA;
+}
+
+@layer components {
+  .product-card {
+    @apply rounded-2xl border border-black/[0.07] bg-white;
+  }
+
+  .product-input {
+    @apply h-[50px] w-full rounded-xl border border-black/[0.09] bg-[#FBFAF8] px-4 text-sm outline-none transition;
+  }
+
+  .product-input:focus {
+    border-color: rgba(228, 17, 89, 0.45);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(228, 17, 89, 0.07);
+  }
+
+  .product-button {
+    @apply inline-flex items-center justify-center rounded-xl bg-[#E41159] px-5 py-3 text-sm font-semibold text-white transition-all duration-200;
+  }
+
+  .product-button:hover {
+    transform: translateY(-2px);
+    background: #D90F53;
+    box-shadow: 0 10px 25px rgba(228, 17, 89, 0.18);
+  }
+}
