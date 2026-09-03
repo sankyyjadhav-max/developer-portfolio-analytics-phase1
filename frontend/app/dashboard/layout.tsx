@@ -8,6 +8,7 @@ import {
   FolderKanban,
   Palette,
   Settings,
+  BarChart3,
   ExternalLink,
   LogOut,
   Menu,
@@ -39,6 +40,7 @@ const navigation = [
     href: "/dashboard/appearance",
     icon: Palette,
   },
+  { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   {
     name: "Settings",
     href: "/dashboard/settings",

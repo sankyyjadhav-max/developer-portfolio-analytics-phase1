@@ -1,79 +1,109 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
 }
-
 model User {
-  id                  String    @id @default(cuid())
-  name                String
-  email               String    @unique
-  password            String
-  resetToken          String?   @unique
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  password String
+  resetToken String? @unique
   resetTokenExpiresAt DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   portfolio Portfolio?
-
   @@index([email])
 }
-
 model Portfolio {
-  id        String  @id @default(cuid())
-  userId    String  @unique
-  slug      String  @unique
+  id String @id @default(cuid())
+  userId String @unique
+  slug String @unique
   published Boolean @default(false)
-
-  fullName     String?
-  title        String?
+  fullName String?
+  title String?
   profileImage String?
-  location     String?
-  email        String?
-  phone        String?
+  location String?
+  email String?
+  phone String?
   introduction String?
-  about        String?
-
-  skills      Json @default("[]")
-  experience  Json @default("[]")
-  education   Json @default("[]")
+  about String?
+  skills Json @default("[]")
+  experience Json @default("[]")
+  education Json @default("[]")
   socialLinks Json @default("{}")
-
-  template String  @default("minimal")
-  accent   String  @default("neutral")
+  template String @default("minimal")
+  accent String @default("neutral")
   darkMode Boolean @default(false)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
   projects Project[]
-
+  visitorSessions VisitorSession[]
+  analyticsEvents AnalyticsEvent[]
   @@index([userId])
-  @@index([published, slug])
+  @@index([published,slug])
 }
-
 model Project {
-  id          String @id @default(cuid())
+  id String @id @default(cuid())
   portfolioId String
-
-  title       String
+  title String
   description String
-  image       String?
-
+  image String?
   technologies Json @default("[]")
-
-  githubUrl   String?
+  githubUrl String?
   liveDemoUrl String?
-  featured    Boolean @default(false)
-
+  featured Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-
+  portfolio Portfolio @relation(fields:[portfolioId],references:[id],onDelete:Cascade)
+  analyticsEvents AnalyticsEvent[]
   @@index([portfolioId])
+}
+enum AnalyticsEventType {
+  PORTFOLIO_VIEW
+  PROJECT_CLICK
+  PAGE_VIEW
+}
+model VisitorSession {
+  id String @id @default(cuid())
+  portfolioId String
+  anonymousId String
+  firstSeenAt DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  visitCount Int @default(1)
+  country String @default("Unknown")
+  state String @default("Unknown")
+  city String @default("Unknown")
+  device String @default("Other")
+  browser String @default("Other")
+  portfolio Portfolio @relation(fields:[portfolioId],references:[id],onDelete:Cascade)
+  events AnalyticsEvent[]
+  @@unique([portfolioId,anonymousId])
+  @@index([portfolioId,lastSeenAt])
+  @@index([portfolioId,firstSeenAt])
+}
+model AnalyticsEvent {
+  id String @id @default(cuid())
+  portfolioId String
+  projectId String?
+  sessionId String
+  type AnalyticsEventType
+  page String
+  referrer String @default("Direct")
+  device String @default("Other")
+  browser String @default("Other")
+  country String @default("Unknown")
+  state String @default("Unknown")
+  city String @default("Unknown")
+  createdAt DateTime @default(now())
+  portfolio Portfolio @relation(fields:[portfolioId],references:[id],onDelete:Cascade)
+  project Project? @relation(fields:[projectId],references:[id],onDelete:SetNull)
+  session VisitorSession @relation(fields:[sessionId],references:[id],onDelete:Cascade)
+  @@index([portfolioId,createdAt])
+  @@index([portfolioId,type,createdAt])
+  @@index([projectId,createdAt])
+  @@index([sessionId,createdAt])
 }

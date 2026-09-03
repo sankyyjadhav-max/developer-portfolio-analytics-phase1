@@ -1,0 +1,1 @@
+import {Router} from 'express'; import {auth} from '../middleware/auth'; import {collect,dashboard} from '../controllers/analytics'; const r=Router(); r.post('/events',collect); r.get('/dashboard',auth,dashboard); export default r;
