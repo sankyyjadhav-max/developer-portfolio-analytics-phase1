@@ -272,8 +272,7 @@ export default function PublicPortfolio({
     );
   }
 
-  const isDark =
-    portfolio.darkMode;
+const isDark = portfolio.darkMode ?? false;
 
   return (
     <MinimalPortfolio
