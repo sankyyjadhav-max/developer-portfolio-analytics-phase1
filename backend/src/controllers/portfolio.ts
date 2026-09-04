@@ -90,16 +90,52 @@ export async function createPortfolio(req: Request, res: Response) {
 
 export async function updatePortfolio(req: Request, res: Response) {
   try {
+    const {
+      slug,
+      fullName,
+      title,
+      profileImage,
+      location,
+      email,
+      phone,
+      introduction,
+      about,
+      skills,
+      experience,
+      education,
+      socialLinks,
+      template,
+      accent,
+      darkMode,
+    } = req.body;
+
     const portfolio = await prisma.portfolio.update({
       where: {
         userId: req.userId!,
       },
-      data: req.body,
+      data: {
+        slug,
+        fullName,
+        title,
+        profileImage,
+        location,
+        email,
+        phone,
+        introduction,
+        about,
+        skills,
+        experience,
+        education,
+        socialLinks,
+        template,
+        accent,
+        darkMode,
+      },
       include: {
         projects: {
           orderBy: [
-            { featured: 'desc' },
-            { createdAt: 'desc' },
+            { featured: "desc" },
+            { createdAt: "desc" },
           ],
         },
       },
@@ -112,7 +148,7 @@ export async function updatePortfolio(req: Request, res: Response) {
   } catch (error: any) {
     return res.status(400).json({
       success: false,
-      message: error?.message || 'Unable to update portfolio',
+      message: error?.message || "Unable to update portfolio",
     });
   }
 }
